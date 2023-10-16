@@ -15,6 +15,7 @@ import (
 const (
 	Token         = "YOUR_BOT_TOKEN"
 	NekoAPIURL    = "https://nekos.life/api/v2/img/"
+	WaifuAPIURL   = "https://api.waifu.pics/sfw/"
 	DefaultColor  = 0x00ff00 
 	ErrorMessage  = "Oops! Something went wrong."
 	MaxRandomSeed = 100000
@@ -23,6 +24,37 @@ const (
 var (
 	commandList = []string{
 		"neko",
+		"shinobu",
+		"megumin",
+		"bully",
+		"cuddle",
+		"cry",
+		"hug",
+		"awoo",
+		"kiss",
+		"lick",
+		"pat",
+		"smug",
+		"help",
+		"bonk",
+		"yeet",
+		"blush",
+		"smile",
+		"wave",
+		"highfive",
+		"handhold",
+		"nom",
+		"bite",
+		"glomp",
+		"slap",
+		"kill",
+		"kick",
+		"happy",
+		"wink",
+		"poke",
+		"dance",
+		"cringe",
+		"waifu", 
 	}
 )
 
@@ -72,7 +104,15 @@ func sendHelpMessage(s *discordgo.Session, channelID string) {
 }
 
 func fetchAndSendImage(s *discordgo.Session, channelID, command string) {
-	response, err := http.Get(NekoAPIURL + command)
+	var apiUrl string
+
+	if command == "neko" {
+		apiUrl = NekoAPIURL + "neko"
+	} else {
+		apiUrl = WaifuAPIURL + command
+	}
+
+	response, err := http.Get(apiUrl)
 	if err != nil {
 		log.Printf("Failed to fetch image for command %s: %s", command, err)
 		sendErrorMessage(s, channelID)
@@ -93,7 +133,7 @@ func fetchAndSendImage(s *discordgo.Session, channelID, command string) {
 		Title:  strings.Title(command) + " Image",
 		Image:  &discordgo.MessageEmbedImage{URL: imageURL},
 		Color:  DefaultColor,
-		Footer: &discordgo.MessageEmbedFooter{Text: "Powered by nekos.life"},
+		Footer: &discordgo.MessageEmbedFooter{Text: "Here you go~"},
 	}
 
 	_, err = s.ChannelMessageSendEmbed(channelID, embed)
@@ -110,6 +150,7 @@ func sendErrorMessage(s *discordgo.Session, channelID string) {
 		log.Printf("Failed to send error message: %s", err)
 	}
 }
+
 
 func containsString(list []string, val string) bool {
 	for _, item := range list {
